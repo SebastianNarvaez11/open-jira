@@ -1,15 +1,30 @@
-import { Card } from "@mui/material"
-import CardActionArea from "@mui/material/CardActionArea"
-import CardActions from "@mui/material/CardActions"
-import CardContent from "@mui/material/CardContent"
-import Typography from "@mui/material/Typography"
+import { FC, DragEvent, useContext } from 'react'
+import { Card, CardActionArea, CardActions, CardContent, Typography } from "@mui/material"
+import { Entry } from "../../interfaces"
+import { UIContext } from '../../context/ui'
 
-export const EntryCard = () => {
+interface Props {
+    entry: Entry
+}
+
+export const EntryCard: FC<Props> = ({ entry }) => {
+
+    const { setIsDragging } = useContext(UIContext)
+
+    const onDragStart = (event: DragEvent) => {
+        setIsDragging(true)
+        event.dataTransfer.setData('id_entry', entry._id)
+    }
+
+    const onDragEnd = () => {
+        setIsDragging(false)
+    }
+
     return (
-        <Card sx={{ marginBottom: 1 }}>
+        <Card sx={{ marginBottom: 1 }} draggable onDragStart={onDragStart} onDragEnd={onDragEnd}>
             <CardActionArea>
                 <CardContent>
-                    <Typography sx={{ whiteSpace: 'pre-line' }}>Esto es la descripcion</Typography>
+                    <Typography sx={{ whiteSpace: 'pre-line' }}>{entry.description}</Typography>
                 </CardContent>
                 <CardActions sx={{ display: 'flex', justifyContent: 'end', paddingRight: 2 }}>
                     <Typography variant="body2">hace 30 minutos</Typography>
